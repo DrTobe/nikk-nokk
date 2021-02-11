@@ -1,0 +1,36 @@
+<html>
+<head>
+</head>
+<body>
+    <div id="remaining"></div>
+    <script type="text/javascript">
+        const firstInterval = 20*60; // 20 min
+        const secondInterval = 1*60; // 1 min
+        const secondTimestamp = firstInterval + secondInterval;
+        let start = Date.now();
+        let chimed = false;
+        setInterval(function() {
+            let elapsed_secs = (Date.now() - start) / 1000;
+            let remaining = (!chimed ? firstInterval : secondTimestamp) - elapsed_secs;
+            let rem_min = Math.floor(remaining / 60).toString().padStart(2, "0");
+            let rem_sec = Math.round(remaining % 60).toString().padStart(2, "0");
+            document.getElementById("remaining").innerHTML = rem_min+":"+rem_sec;
+            if (elapsed_secs > firstInterval && !chimed) {
+                chimed = true;
+                chime();
+            }
+            if (elapsed_secs > secondTimestamp) {
+                chimed = false;
+                start = Date.now();
+                chime();
+            }
+            console.log(new Date().toUTCString());
+        }, 1000); // run once per second
+
+        function chime() {
+            var audio = new Audio('chime.mp3');
+            audio.play();
+        }
+    </script>
+</body>
+</html>
